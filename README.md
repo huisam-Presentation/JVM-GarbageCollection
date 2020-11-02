@@ -9,6 +9,7 @@
     - [튜닝 포인트](#튜닝-포인트)
   - [New Feature(...)](#new-feature)
     - [ZGC](#zgc)
+    - [성능비교](#성능비교)
   - [마치면서](#마치면서)
   - [참고](#참고)
 
@@ -157,8 +158,8 @@ Region은 기본적으로 ( 전체 Heap 메모리 ) / 2048 로 default 값이 �
 ## New Feature(...)
 그래서 현재 지금 계속 개발되고 있는 GC 알고리즘이 무엇이냐면 :question:  
 바로 ZGC 입니다  
-`ZGC` 는 **JDK 15버젼에서 바로 Production Ready** 상태로
 ### ZGC
+`ZGC` 는 **JDK 15버젼에서 바로 Production Ready** 상태인데요,    
 조금 더 큰 메모리(8MB ~ 16TB) 에서 효율적으로 Garbage Collect 하기 위한 알고리즘    
 개발자가 이야기하기를 
 ```text
@@ -212,6 +213,19 @@ But this pauses are usually quite short - only a few milliseconds.
 `G1GC` 와의 차이점은, 바로 Pointer를 이용해서 객체를 Marking하고 관리하는 것이 핵심이라고 볼 수 있겠네요!  
 개발자분 말씀으로는 **어떠한 Heap 메모리 사이즈가 와도**    
 각각의 `STW` 시간을 (<10ms) 이하로 줄이는 것이 `ZGC` 의 **궁극적인 목표** 라고 합니다
+
+### 성능비교
+
+`ZGC` 는 위에 설명에서도 아시겠지만, 큰 메모리에 아주 적합한 GC 방식입니다  
+그래서 성능적으로 많이 이득을 보기 위해서는 메모리가 크면 클 수록 좋겠죠.?
+
+<div>
+  <img src="img/zgc-gc-time.jpg" text-align="center">
+</div>
+
+위와 같은 테스트환경은, Heap Size `128G` , CPU `Intel Xeon E5-2690 2.9GHz, 16core` 환경에서 성능을 측정한 결과인데요  
+최악의 경우에는 `G1GC` 와 비교했을 때 거의 1000배? **STW** 시간의 차이가 나는 것을 볼 수 있습니다!  
+> 어쩌면 곧 ZGC가 G1GC들을 대체할 날이 오지 않을까요? 😄
 
 ## 마치면서
 하드웨어도 시간에 따라 점점 발전하고, SW 도 마찬가지입니다  
